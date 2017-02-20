@@ -19,8 +19,15 @@ class ClockMode(object):
         s = now.tm_sec
         s_angle = ((s- 15) * math.pi) / 30.0
 
-        center = (200, 100)
+        t = self.clockfont.render(time.strftime("%H:%M:%S"), True, self.white)
+        d = self.datefont.render(time.strftime("%A %d %B %Y"), True, self.white)
+
+        space = 10
+        big_space = 30
+
         radius = 80
+        center = (screen.get_width() // 2,
+                  (screen.get_height() // 2) - (t.get_height() // 2) - radius)
 
         clock_thickness = 10
 
@@ -36,15 +43,13 @@ class ClockMode(object):
                          (center[0]+(((radius-clock_thickness)*0.9)*math.cos(m_angle)),
                           center[1]+(((radius-clock_thickness)*0.9) *math.sin(m_angle))), 3)
         pygame.draw.aaline(screen, self.white, center,
-                           (center[0]+((radius - clock_thickness/2)*math.cos(s_angle)),
-                            center[1]+((radius - clock_thickness/2)*math.sin(s_angle))))
+                           (center[0]+((radius - clock_thickness//2)*math.cos(s_angle)),
+                            center[1]+((radius - clock_thickness//2)*math.sin(s_angle))))
 
-        t = self.clockfont.render(time.strftime("%H:%M:%S"), True, self.white)
-        d = self.datefont.render(time.strftime("%A %d %B %Y"), True, self.white)
 
-        screen.blit(t, (center[0] - (t.get_width() / 2), center[1] + radius + 30))
-        screen.blit(d, (center[0] - (d.get_width() / 2),
-                        center[1] + radius + 30 + t.get_height() + 10))
+        screen.blit(t, (center[0] - (t.get_width() // 2), center[1] + radius + big_space))
+        screen.blit(d, (center[0] - (d.get_width() // 2),
+                        center[1] + radius + big_space + t.get_height() + space))
 
     def only_waits_for_event(self):
         return False

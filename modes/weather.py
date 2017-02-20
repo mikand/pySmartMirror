@@ -55,14 +55,18 @@ class WeatherMode(object):
             self.forecast = self.get_forecast("trento", "it")
             self.last_forecast = ti
             original = pygame.image.load(self.forecast[0])
-            self.weather = pygame.transform.scale(original, (400, 400))
+            self.weather = pygame.transform.scale(original, (300, 300))
             self.weatherrect = self.weather.get_rect()
-        self.weatherrect.center = (250,250)
-        screen.blit(self.weather, self.weatherrect)
-        t = self.font.render("%.1f \u00B0C  %.1f %%" % self.forecast[1:],
+
+        t = self.font.render(u"%.1f \u00B0C  %.1f %%" % self.forecast[1:],
                              True, self.white)
-        screen.blit(t, (self.weatherrect.center[0] - (t.get_width() / 2),
-                        self.weatherrect.height + 10))
+
+        space = 10
+        self.weatherrect.center = ((screen.get_width() // 2),
+                                   (screen.get_height() // 2) - (t.get_height() // 2) - (space // 2))
+        screen.blit(self.weather, self.weatherrect)
+        screen.blit(t, (self.weatherrect.center[0] - (t.get_width() // 2),
+                        self.weatherrect.bottom + space))
 
     def only_waits_for_event(self):
         return True
