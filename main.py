@@ -17,10 +17,14 @@ assets_path = os.path.join(script_path, "assets")
 
 class MainLoop(object):
 
-    def __init__(self):
+    def __init__(self, fullscreen=False):
         self.bg_color = (0, 0, 0)
         self.clock = pygame.time.Clock()
-        self.screen = pygame.display.set_mode((800, 600))#, pygame.FULLSCREEN)
+
+        if fullscreen:
+            self.screen = pygame.display.set_mode((800, 600), pygame.FULLSCREEN)
+        else:
+            self.screen = pygame.display.set_mode((800, 600))
 
         self.modes = [WeatherMode(assets_path),
                       ClockMode(assets_path),
@@ -84,13 +88,19 @@ class MainLoop(object):
         pygame.time.set_timer(pygame.USEREVENT, 0)
 
 if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-f", "--fullscreen", action="store_true")
+    args = parser.parse_args()
+
     locale.setlocale(locale.LC_ALL, 'it_IT.utf8')
 
     pygame.init()
     lirc_socket = None
     if HAS_LIRC:
         lirc_socket = lirc.init("pySmartMirror", blocking=False)
-    main = MainLoop()
+    main = MainLoop(fullscreen=args.fullscreen)
     try:
         main.main_loop(lirc_socket)
     finally:
