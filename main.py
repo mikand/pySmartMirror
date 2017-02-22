@@ -2,6 +2,12 @@ import locale
 import pygame
 import os.path
 
+HAS_LIRC = True
+try:
+    import lirc
+except ImportError:
+    HAS_LIRC = False
+
 from modes.weather import WeatherMode
 from modes.ball import BallMode
 from modes.clock import ClockMode
@@ -23,6 +29,19 @@ class MainLoop(object):
 
         self.running = True
 
+    def lirc2pygame(self, keys):
+        k = keys[0]
+        if k == "KEY_POWER":
+            return pygame.event.Event(pygame.QUIT)
+        if k == "KEY_LEFT":
+            return pygame.event.Event(pygame.QUIT, key=pygame.K_LEFT)
+        if k == "KEY_RIGHT":
+            return pygame.event.Event(pygame.QUIT, key=pygame.K_RIGHT)
+        if k == "KEY_UP":
+            return pygame.event.Event(pygame.QUIT, key=pygame.K_UP)
+        if k == "KEY_DOWN":
+            return pygame.event.Event(pygame.QUIT, key=pygame.K_DOWN)
+
     def process_event(self, event):
         if event.type == pygame.QUIT:
             self.running = False
@@ -35,13 +54,11 @@ class MainLoop(object):
                 self.current_mode = (self.current_mode - 1) % len(self.modes)
 
 
-    def main_loop(self):
+    def main_loop(self, lirc_socket=None):
         # Generate an artificial event every 10 seconds to perform
         # updates if a mode does not require repainting
         pygame.time.set_timer(pygame.USEREVENT, 10000)
         pygame.event.set_blocked(pygame.MOUSEMOTION)
-
-        #sub_screen = self.screen.subsurface(pygame.Rect(0, 0, 400, 400))
 
         clear = self.screen.copy()
         clear.fill((0, 0, 0))
@@ -51,9 +68,12 @@ class MainLoop(object):
 
             for event in pygame.event.get():
                 self.process_event(event)
+            if lirc_socket:
+                keys = lirc.nextcode()
+                if keys:
+                    process_event(self.lirc2pygame(keys))
 
             self.screen.blit(clear, (0, 0))
-            #self.screen.fill(self.bg_color)
 
             mode.loop(self.screen)
 
@@ -61,18 +81,19 @@ class MainLoop(object):
             self.clock.tick(mode.preferred_fps())
             pygame.display.set_caption("fps: %.2f" % self.clock.get_fps())
 
-            # if mode.only_waits_for_event():
-            #     event = pygame.event.wait()
-            #     self.process_event(event)
-
         pygame.time.set_timer(pygame.USEREVENT, 0)
 
 if __name__ == "__main__":
     locale.setlocale(locale.LC_ALL, 'it_IT.utf8')
 
     pygame.init()
+    lirc_socket = None
+    if HAS_LIRC:
+        lirc_socket = lirc.init("pySmartMirror", blocking=False)
     main = MainLoop()
     try:
-        main.main_loop()
+        main.main_loop(lirc_socket)
     finally:
+        if HAS_LIRC:
+            lirc.deinit()
         pygame.quit()
