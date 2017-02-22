@@ -37,15 +37,18 @@ class MainLoop(object):
         k = keys[0]
         if k == "KEY_POWER":
             return pygame.event.Event(pygame.QUIT)
-        if k == "KEY_LEFT":
-            return pygame.event.Event(pygame.QUIT, key=pygame.K_LEFT)
-        if k == "KEY_RIGHT":
-            return pygame.event.Event(pygame.QUIT, key=pygame.K_RIGHT)
-        if k == "KEY_UP":
-            return pygame.event.Event(pygame.QUIT, key=pygame.K_UP)
-        if k == "KEY_DOWN":
-            return pygame.event.Event(pygame.QUIT, key=pygame.K_DOWN)
 
+        # These keys are already handled by pygame!
+        # if k == "KEY_LEFT":
+        #     return pygame.event.Event(pygame.KEYDOWN, key=pygame.K_LEFT)
+        # if k == "KEY_RIGHT":
+        #     return pygame.event.Event(pygame.KEYDOWN, key=pygame.K_RIGHT)
+        # if k == "KEY_UP":
+        #     return pygame.event.Event(pygame.KEYDOWN, key=pygame.K_UP)
+        # if k == "KEY_DOWN":
+        #     return pygame.event.Event(pygame.KEYDOWN, key=pygame.K_DOWN)
+        return None
+        
     def process_event(self, event):
         if event.type == pygame.QUIT:
             self.running = False
@@ -75,7 +78,9 @@ class MainLoop(object):
             if lirc_socket:
                 keys = lirc.nextcode()
                 if keys:
-                    process_event(self.lirc2pygame(keys))
+                    event = self.lirc2pygame(keys)
+                    if event:
+                        self.process_event(event)
 
             self.screen.blit(clear, (0, 0))
 
