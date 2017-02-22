@@ -1,12 +1,13 @@
 import pygame
 import time
 import math
+import os.path
 
 class ClockMode(object):
 
-    def __init__(self):
-        self.clockfont = pygame.font.SysFont("assets/Helvetica.ttf", 70)
-        self.datefont = pygame.font.Font("assets/Arimo-Regular.ttf", 20)
+    def __init__(self, assets_path):
+        self.clockfont = pygame.font.Font(os.path.join(assets_path, "Helvetica.ttf"), 70)
+        self.datefont = pygame.font.Font(os.path.join(assets_path, "Arimo-Regular.ttf"), 20)
         self.white = (255, 255, 255)
         self.black = (0, 0, 0)
 

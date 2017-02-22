@@ -1,9 +1,10 @@
 import pygame
+import os.path
 
 class BallMode(object):
 
-    def __init__(self):
-        self.ball = pygame.image.load("assets/ball.gif")
+    def __init__(self, assets_path):
+        self.ball = pygame.image.load(os.path.join(assets_path, "ball.gif"))
         self.ballrect = self.ball.get_rect()
         self.speed = [4, 6]
 

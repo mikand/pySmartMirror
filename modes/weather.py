@@ -1,35 +1,37 @@
 import requests
 import time
 import pygame
+import os.path
 
 WEATHER_ICON_MAP = {
-    "01d" : "assets/Sun.png",
-    "01n" : "assets/Moon.png",
-    "02d" : "assets/PartlySunny.png",
-    "02n" : "assets/PartlyMoon.png",
-    "03d" : "assets/Cloud.png",
-    "03n" : "assets/Cloud.png",
-    "04d" : "assets/Cloud.png",
-    "04n" : "assets/Cloud.png",
-    "09d" : "assets/Rain.png",
-    "09n" : "assets/Rain.png",
-    "10d" : "assets/Rain.png",
-    "10n" : "assets/Rain.png",
-    "11d" : "assets/Storm.png",
-    "11n" : "assets/Storm.png",
-    "13d" : "assets/Snow.png",
-    "13n" : "assets/Snow.png",
-    "50d" : "assets/Haze.png",
-    "50n" : "assets/Haze.png",
+    "01d" : "Sun.png",
+    "01n" : "Moon.png",
+    "02d" : "PartlySunny.png",
+    "02n" : "PartlyMoon.png",
+    "03d" : "Cloud.png",
+    "03n" : "Cloud.png",
+    "04d" : "Cloud.png",
+    "04n" : "Cloud.png",
+    "09d" : "Rain.png",
+    "09n" : "Rain.png",
+    "10d" : "Rain.png",
+    "10n" : "Rain.png",
+    "11d" : "Storm.png",
+    "11n" : "Storm.png",
+    "13d" : "Snow.png",
+    "13n" : "Snow.png",
+    "50d" : "Haze.png",
+    "50n" : "Haze.png",
 }
 
 
 class WeatherMode(object):
 
-    def __init__(self):
+    def __init__(self, assets_path):
+        self.assets_path = assets_path
         self.forecast = None
         self.last_forecast = None
-        self.font = pygame.font.SysFont("assets/Helvetica.ttf", 70)
+        self.font = pygame.font.Font(os.path.join(assets_path, "Helvetica.ttf"), 70)
         self.white = (255,255,255)
         self.weather = None
         self.weatherrect = None
@@ -47,7 +49,7 @@ class WeatherMode(object):
         temperature = data['main']['temp']
         humidity =  data['main']['humidity']
 
-        return WEATHER_ICON_MAP[icon_id], temperature, humidity
+        return os.path.join(self.assets_path, WEATHER_ICON_MAP[icon_id]), temperature, humidity
 
     def loop(self, screen):
         ti = time.time()
