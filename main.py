@@ -99,7 +99,9 @@ if __name__ == "__main__":
     pygame.init()
     lirc_socket = None
     if HAS_LIRC:
-        lirc_socket = lirc.init("pySmartMirror", blocking=False)
+        lirc_socket = lirc.init("pySmartMirror",
+                                config_filename=os.path.join(assets_path, "lircrc"),
+                                blocking=False)
     main = MainLoop(fullscreen=args.fullscreen)
     try:
         main.main_loop(lirc_socket)

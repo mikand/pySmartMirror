@@ -1,0 +1,47 @@
+begin
+  button = KEY_POWER
+  prog = pySmartMirror
+  config = KEY_POWER
+end
+
+begin
+  button = KEY_OK
+  prog = pySmartMirror
+  config = KEY_OK
+end
+
+begin
+  button = KEY_UP
+  prog = pySmartMirror
+  config = KEY_UP
+end
+
+begin
+  button = KEY_DOWN
+  prog = pySmartMirror
+  config = KEY_DOWN
+end
+
+begin
+  button = KEY_LEFT
+  prog = pySmartMirror
+  config = KEY_LEFT
+end
+
+begin
+  button = KEY_RIGHT
+  prog = pySmartMirror
+  config = KEY_RIGHT
+end
+
+begin
+  button = KEY_BACK
+  prog = pySmartMirror
+  config = KEY_BACK
+end
+
+begin
+  button = KEY_RECORD
+  prog = pySmartMirror
+  config = KEY_RECORD
+end
