@@ -12,6 +12,8 @@ from modes.weather import WeatherMode
 from modes.ball import BallMode
 from modes.clock import ClockMode
 
+from hardware import Hardware
+
 script_path = os.path.dirname(os.path.realpath(__file__))
 assets_path = os.path.join(script_path, "assets")
 
@@ -32,7 +34,12 @@ class MainLoop(object):
         self.current_mode = 0
 
         self.running = True
+        
+        self.hw = Hardware()
+        self.led_level = 10
+        
 
+        
     def lirc2pygame(self, keys):
         k = keys[0]
         if k == "KEY_POWER":
@@ -59,6 +66,14 @@ class MainLoop(object):
                 self.current_mode = (self.current_mode + 1) % len(self.modes)
             elif event.key == pygame.K_LEFT:
                 self.current_mode = (self.current_mode - 1) % len(self.modes)
+            elif event.key == pygame.K_UP:
+                self.hw.enable_led(True)
+                self.led_level = min(10, self.led_level + 1)
+                self.hw.dim_led(self.led_level * 10)
+            elif event.key == pygame.K_DOWN:
+                self.hw.enable_led(True)
+                self.led_level = max(0, self.led_level - 1)
+                self.hw.dim_led(self.led_level * 10)
 
 
     def main_loop(self, lirc_socket=None):
@@ -67,9 +82,14 @@ class MainLoop(object):
         pygame.time.set_timer(pygame.USEREVENT, 10000)
         pygame.event.set_blocked(pygame.MOUSEMOTION)
 
+        # Hide mouse cursor
+        pygame.mouse.set_visible(False)
+        
         clear = self.screen.copy()
         clear.fill((0, 0, 0))
 
+        self.hw.enable_screen(True)
+        
         while self.running:
             mode = self.modes[self.current_mode]
 
@@ -113,4 +133,5 @@ if __name__ == "__main__":
     finally:
         if HAS_LIRC:
             lirc.deinit()
+        main.hw.deinit()
         pygame.quit()

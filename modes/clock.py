@@ -56,4 +56,4 @@ class ClockMode(object):
         return False
 
     def preferred_fps(self):
-        return 5
+        return 10

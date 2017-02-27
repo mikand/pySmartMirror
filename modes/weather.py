@@ -74,4 +74,4 @@ class WeatherMode(object):
         return True
 
     def preferred_fps(self):
-        return 1
+        return 10
