@@ -75,3 +75,6 @@ class WeatherMode(object):
 
     def preferred_fps(self):
         return 10
+
+    def deinit(self):
+        pass

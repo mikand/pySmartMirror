@@ -146,6 +146,8 @@ if __name__ == "__main__":
             if HAS_LIRC:
                 lirc.deinit()
             ml.hw.deinit()
+            for m in ml.modes:
+                m.deinit()
             pygame.quit()
 
 

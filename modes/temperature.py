@@ -1,5 +1,8 @@
 import pygame
 import os.path
+import Adafruit_DHT    
+import threading
+import time
 
 class TemperatureMode(object):
 
@@ -12,8 +15,38 @@ class TemperatureMode(object):
         self.img = pygame.transform.scale(original, (300, 300))
         self.imgrect = self.img.get_rect()
 
+        self.readings_lock = threading.RLock()
+        self.readings = []
+        self.reading_thread_run = True
+        self.reading_thread = threading.Thread(target=self.reading_loop)
+        self.reading_thread.start()
+
+    def reading_loop(self):
+        while self.reading_thread_run:
+            self.read_temperature()
+            time.sleep(5)
+        
+    def read_temperature(self):
+        humidity, temperature = Adafruit_DHT.read_retry(Adafruit_DHT.DHT11, 18)
+        with self.readings_lock:
+            if len(self.readings) >= 10:
+                self.readings.pop(0)
+            self.readings.append((humidity, temperature))
+            
+    def temperature(self):
+        with self.readings_lock:
+            if len(self.readings) == 0:
+                return "?"
+            return sum(x[1] for x in self.readings) / float(len(self.readings))
+
+    def humidity(self):
+        with self.readings_lock:
+            if len(self.readings) == 0:
+                return "?"
+            return sum(x[0] for x in self.readings) / float(len(self.readings))
+
     def loop(self, screen):
-        t = self.font.render(u"%.1f \u00B0C  %.1f %%" % (10, 20), True, self.white)
+        t = self.font.render(u"%.1f \u00B0C  %.1f %%" % (self.temperature(), self.humidity()), True, self.white)
 
         space = 10
         self.imgrect.center = ((screen.get_width() // 2),
@@ -27,3 +60,7 @@ class TemperatureMode(object):
 
     def preferred_fps(self):
         return 10
+
+    def deinit(self):
+        self.reading_thread_run = False
+        self.reading_thread.join()

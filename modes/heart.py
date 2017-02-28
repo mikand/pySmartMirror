@@ -55,3 +55,6 @@ class HeartMode(object):
 
     def preferred_fps(self):
         return 60
+
+    def deinit(self):
+        pass
