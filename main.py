@@ -75,8 +75,10 @@ class MainLoop(object):
             if event.key == pygame.K_l:
                 if self.led_level > 0:
                     self.led_level = 0
+                    self.hw.enable_led(False)
                 else:
                     self.led_level = 10
+                    self.hw.enable_led(True)
                 self.hw.dim_led(self.led_level * 10)
             elif event.key == pygame.K_RIGHT:
                 self.current_mode = (self.current_mode + 1) % len(self.modes)
@@ -87,17 +89,14 @@ class MainLoop(object):
                 self.led_level = min(10, self.led_level + 1)
                 self.hw.dim_led(self.led_level * 10)
             elif event.key == pygame.K_DOWN:
-                self.hw.enable_led(True)
                 self.led_level = max(0, self.led_level - 1)
-                self.hw.dim_led(self.led_level * 10)
+                if self.led_level == 0:
+                    self.hw.enable_led(False)
+                else:
+                    self.hw.dim_led(self.led_level * 10)
 
 
     def main_loop(self, lirc_socket=None):
-        # Generate an artificial event every 10 seconds to perform
-        # updates if a mode does not require repainting
-        pygame.time.set_timer(pygame.USEREVENT, 10000)
-        pygame.event.set_blocked(pygame.MOUSEMOTION)
-
         # Hide mouse cursor
         pygame.mouse.set_visible(False)
 
