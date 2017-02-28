@@ -26,9 +26,9 @@ class ClockMode(object):
         space = 10
         big_space = 30
 
-        radius = 80
+        radius = 100
         center = (screen.get_width() // 2,
-                  (screen.get_height() // 2) - (t.get_height() // 2) - radius)
+                  (screen.get_height() // 2) - (t.get_height() // 2) - (space//2) - (big_space // 2) - (d.get_height() // 2))
 
         clock_thickness = 10
 
