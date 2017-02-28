@@ -70,8 +70,8 @@ class WeatherMode(object):
         screen.blit(t, (self.weatherrect.center[0] - (t.get_width() // 2),
                         self.weatherrect.bottom + space))
 
-    def only_waits_for_event(self):
-        return True
+    def process_event(self, event):
+        pass
 
     def preferred_fps(self):
         return 10

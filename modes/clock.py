@@ -52,8 +52,8 @@ class ClockMode(object):
         screen.blit(d, (center[0] - (d.get_width() // 2),
                         center[1] + radius + big_space + t.get_height() + space))
 
-    def only_waits_for_event(self):
-        return False
+    def process_event(self, event):
+        pass
 
     def preferred_fps(self):
         return 10

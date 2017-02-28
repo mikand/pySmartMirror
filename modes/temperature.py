@@ -22,8 +22,8 @@ class TemperatureMode(object):
         screen.blit(t, (self.imgrect.center[0] - (t.get_width() // 2),
                         self.imgrect.bottom + space))
 
-    def only_waits_for_event(self):
-        return True
+    def process_event(self, event):
+        pass
 
     def preferred_fps(self):
         return 10

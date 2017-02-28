@@ -50,8 +50,8 @@ class HeartMode(object):
         for h in self.hearts:
             h.loop(screen, self.ball)
 
-    def only_waits_for_event(self):
-        return False
+    def process_event(self, event):
+        pass
 
     def preferred_fps(self):
         return 60

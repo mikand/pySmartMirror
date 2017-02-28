@@ -39,8 +39,8 @@ class LinesMode(object):
         self.index += 1
 
 
-    def only_waits_for_event(self):
-        return False
+    def process_event(self, event):
+        pass
 
     def preferred_fps(self):
         return 60

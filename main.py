@@ -38,16 +38,19 @@ class MainLoop(object):
         self.current_mode = 0
 
         self.running = True
+        self.standby = False
 
         self.hw = Hardware()
-        self.led_level = 10
+        self.led_level = 0
 
 
 
     def lirc2pygame(self, keys):
         k = keys[0]
         if k == "KEY_POWER":
-            return pygame.event.Event(pygame.QUIT)
+            return pygame.event.Event(pygame.KEYDOWN, key=pygame.K_s)
+        if k == "KEY_RECORD":
+            return pygame.event.Event(pygame.KEYDOWN, key=pygame.K_l)
 
         # These keys are already handled by pygame!
         # if k == "KEY_LEFT":
@@ -66,6 +69,15 @@ class MainLoop(object):
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 self.running = False
+            if event.key == pygame.K_s:
+                self.standby = not self.standby
+                self.hw.enable_screen(not self.standby)
+            if event.key == pygame.K_l:
+                if self.led_level > 0:
+                    self.led_level = 0
+                else:
+                    self.led_level = 10
+                self.hw.dim_led(self.led_level * 10)
             elif event.key == pygame.K_RIGHT:
                 self.current_mode = (self.current_mode + 1) % len(self.modes)
             elif event.key == pygame.K_LEFT:
@@ -99,12 +111,14 @@ class MainLoop(object):
 
             for event in pygame.event.get():
                 self.process_event(event)
+                mode.process_event(event)
             if lirc_socket:
                 keys = lirc.nextcode()
                 if keys:
                     event = self.lirc2pygame(keys)
                     if event:
                         self.process_event(event)
+                        mode.process_event(event)
 
             self.screen.blit(clear, (0, 0))
 
