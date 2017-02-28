@@ -9,8 +9,10 @@ except ImportError:
     HAS_LIRC = False
 
 from modes.weather import WeatherMode
-from modes.ball import BallMode
+from modes.heart import HeartMode
+from modes.lines import LinesMode
 from modes.clock import ClockMode
+from modes.temperature import TemperatureMode
 
 from hardware import Hardware
 
@@ -28,18 +30,20 @@ class MainLoop(object):
         else:
             self.screen = pygame.display.set_mode((800, 600))
 
-        self.modes = [WeatherMode(assets_path),
+        self.modes = [HeartMode(assets_path),
+                      LinesMode(assets_path),
+                      WeatherMode(assets_path),
                       ClockMode(assets_path),
-                      BallMode(assets_path)]
+                      TemperatureMode(assets_path)]
         self.current_mode = 0
 
         self.running = True
-        
+
         self.hw = Hardware()
         self.led_level = 10
-        
 
-        
+
+
     def lirc2pygame(self, keys):
         k = keys[0]
         if k == "KEY_POWER":
@@ -55,7 +59,7 @@ class MainLoop(object):
         # if k == "KEY_DOWN":
         #     return pygame.event.Event(pygame.KEYDOWN, key=pygame.K_DOWN)
         return None
-        
+
     def process_event(self, event):
         if event.type == pygame.QUIT:
             self.running = False
@@ -84,12 +88,12 @@ class MainLoop(object):
 
         # Hide mouse cursor
         pygame.mouse.set_visible(False)
-        
+
         clear = self.screen.copy()
         clear.fill((0, 0, 0))
 
         self.hw.enable_screen(True)
-        
+
         while self.running:
             mode = self.modes[self.current_mode]
 
@@ -113,6 +117,24 @@ class MainLoop(object):
         pygame.time.set_timer(pygame.USEREVENT, 0)
 
 if __name__ == "__main__":
+
+    def main(fullscreen):
+        pygame.init()
+        lirc_socket = None
+        if HAS_LIRC:
+            lirc_socket = lirc.init("pySmartMirror",
+                                    config_filename=os.path.join(assets_path, "lircrc"),
+                                    blocking=False)
+        ml = MainLoop(fullscreen=fullscreen)
+        try:
+            ml.main_loop(lirc_socket)
+        finally:
+            if HAS_LIRC:
+                lirc.deinit()
+            ml.hw.deinit()
+            pygame.quit()
+
+
     import argparse
 
     parser = argparse.ArgumentParser()
@@ -121,17 +143,4 @@ if __name__ == "__main__":
 
     locale.setlocale(locale.LC_ALL, 'it_IT.utf8')
 
-    pygame.init()
-    lirc_socket = None
-    if HAS_LIRC:
-        lirc_socket = lirc.init("pySmartMirror",
-                                config_filename=os.path.join(assets_path, "lircrc"),
-                                blocking=False)
-    main = MainLoop(fullscreen=args.fullscreen)
-    try:
-        main.main_loop(lirc_socket)
-    finally:
-        if HAS_LIRC:
-            lirc.deinit()
-        main.hw.deinit()
-        pygame.quit()
+    main(args.fullscreen)
