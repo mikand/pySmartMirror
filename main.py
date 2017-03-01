@@ -12,6 +12,7 @@ from modes.weather import WeatherMode
 from modes.heart import HeartMode
 from modes.lines import LinesMode
 from modes.clock import ClockMode
+from modes.fortune import FortuneMode
 from modes.temperature import TemperatureMode
 
 from hardware import Hardware
@@ -31,10 +32,11 @@ class MainLoop(object):
             self.screen = pygame.display.set_mode((800, 600))
 
         self.modes = [HeartMode(assets_path),
-                      LinesMode(assets_path),
+                      TemperatureMode(assets_path),
                       WeatherMode(assets_path),
-                      ClockMode(assets_path),
-                      TemperatureMode(assets_path)]
+                      FortuneMode(assets_path),
+                      LinesMode(assets_path),
+                      ClockMode(assets_path)]
         self.current_mode = 0
 
         self.running = True
