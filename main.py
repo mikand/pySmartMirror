@@ -81,9 +81,11 @@ class MainLoop(object):
                     self.hw.enable_led(True)
                 self.hw.dim_led(self.led_level * 10)
             elif event.key == pygame.K_RIGHT:
-                self.current_mode = (self.current_mode + 1) % len(self.modes)
+                if not self.standby:
+                    self.current_mode = (self.current_mode + 1) % len(self.modes)
             elif event.key == pygame.K_LEFT:
-                self.current_mode = (self.current_mode - 1) % len(self.modes)
+                if not self.standby:
+                    self.current_mode = (self.current_mode - 1) % len(self.modes)
             elif event.key == pygame.K_UP:
                 self.hw.enable_led(True)
                 self.led_level = min(10, self.led_level + 1)
@@ -119,15 +121,15 @@ class MainLoop(object):
                         self.process_event(event)
                         mode.process_event(event)
 
-            self.screen.blit(clear, (0, 0))
+            if self.standby:
+                self.clock.tick(5)
+            else:
+                self.screen.blit(clear, (0, 0))
+                mode.loop(self.screen)
+                pygame.display.flip()
 
-            mode.loop(self.screen)
-
-            pygame.display.flip()
-            self.clock.tick(mode.preferred_fps())
-            pygame.display.set_caption("fps: %.2f" % self.clock.get_fps())
-
-        pygame.time.set_timer(pygame.USEREVENT, 0)
+                self.clock.tick(mode.preferred_fps())
+                pygame.display.set_caption("fps: %.2f" % self.clock.get_fps())
 
 if __name__ == "__main__":
 
