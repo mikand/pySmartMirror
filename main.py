@@ -99,6 +99,47 @@ class MainLoop(object):
                 else:
                     self.hw.dim_led(self.led_level * 10)
 
+            elif event.key == pygame.K_0:
+                self.led_level = 0
+                self.hw.enable_led(False)
+            elif event.key == pygame.K_1:
+                self.hw.enable_led(True)
+                self.led_level = 1
+                self.hw.dim_led(self.led_level * 10)
+            elif event.key == pygame.K_2:
+                self.hw.enable_led(True)
+                self.led_level = 2
+                self.hw.dim_led(self.led_level * 10)
+            elif event.key == pygame.K_3:
+                self.hw.enable_led(True)
+                self.led_level = 3
+                self.hw.dim_led(self.led_level * 10)
+            elif event.key == pygame.K_4:
+                self.hw.enable_led(True)
+                self.led_level = 4
+                self.hw.dim_led(self.led_level * 10)
+            elif event.key == pygame.K_5:
+                self.hw.enable_led(True)
+                self.led_level = 5
+                self.hw.dim_led(self.led_level * 10)
+            elif event.key == pygame.K_6:
+                self.hw.enable_led(True)
+                self.led_level = 6
+                self.hw.dim_led(self.led_level * 10)
+            elif event.key == pygame.K_7:
+                self.hw.enable_led(True)
+                self.led_level = 7
+                self.hw.dim_led(self.led_level * 10)
+            elif event.key == pygame.K_8:
+                self.hw.enable_led(True)
+                self.led_level = 8
+                self.hw.dim_led(self.led_level * 10)
+            elif event.key == pygame.K_9:
+                self.hw.enable_led(True)
+                self.led_level = 9
+                self.hw.dim_led(self.led_level * 10)
+
+
 
     def main_loop(self, lirc_socket=None):
         # Hide mouse cursor

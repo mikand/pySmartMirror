@@ -2,14 +2,22 @@ import pygame
 import os.path
 import random
 
+def randcolor():
+    r,g,b = (0,0,0)
+    while (0.299*r + 0.587*g + 0.114*b) < 125:
+        r,g,b = (random.randrange(256),
+                 random.randrange(256),
+                 random.randrange(256))
+    return (r,g,b)
+
 class Heart(object):
     def __init__(self, assets_path):
-        self.heart = pygame.image.load(os.path.join(assets_path, "heart.png"))
+        fname = random.choice(["heart_new.png", "heart.png"])
+        self.heart = pygame.image.load(os.path.join(assets_path, fname))
         self.heartrect = self.heart.get_rect()
         self.radius = self.heartrect.width / 2
 
-        self.color = (random.randrange(256), random.randrange(256),
-                      random.randrange(256), 0)
+        self.color = randcolor() + (0,)
         # zero out RGB values
         self.heart.fill((0, 0, 0, 255), None, pygame.BLEND_RGBA_MULT)
         # add in new RGB values
