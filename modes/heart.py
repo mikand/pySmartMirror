@@ -7,7 +7,7 @@ import utils
 
 class Heart(object):
     def __init__(self, assets_path):
-        fname = random.choice(["heart_new.png", "heart.png"])
+        fname = random.choice(["heart1.png", "heart2.png", "heart3.png"])
         self.heart = pygame.image.load(os.path.join(assets_path, fname))
         self.heartrect = self.heart.get_rect()
         self.radius = self.heartrect.width / 2
