@@ -5,10 +5,15 @@ Dependencies
 ------------
 
 - python 3.5+
+
 - pygame
+  ```pip3 install pygame```
+
+- randomcolor
+  ```pip3 install randomcolor```
 
 
 HowTo Launch
 ------------
 
-```$ python3 main.py```
+```python3 main.py [-f]```

@@ -1,6 +1,7 @@
 import pygame
 import math
 from random import randrange as rr
+import utils
 
 class LinesMode(object):
 
@@ -21,7 +22,7 @@ class LinesMode(object):
                 self.todraw = []
                 self.index = 0
 
-            color = rr(256), rr(256), rr(256)
+            color = utils.randcolor()
             q = rr(1,100)
 
             a = self.circle_points_generator((rr(screen.get_width()), rr(screen.get_height())),
@@ -29,7 +30,7 @@ class LinesMode(object):
             b = self.circle_points_generator((rr(screen.get_width()), rr(screen.get_height())),
                         screen.get_width()/rr(1,5), q*rr(1,10), q*rr(100))
 
-            for _ in range(rr(10) * q):
+            for _ in range(rr(1,10) * q):
                 self.todraw.append((color, next(a), next(b)))
 
         for i in range(self.index):
