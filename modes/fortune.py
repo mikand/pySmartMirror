@@ -19,18 +19,22 @@ class FortuneMode(object):
         self.get_fortune()
 
     def get_fortune(self):
-        lst = None
-        while lst is None or len(lst) > 3 or max(len(x) for x in lst) > 50:
-            p = subprocess.Popen(['fortune', '-s'],
-                                 stdout=subprocess.PIPE,
-                                 stderr=subprocess.PIPE)
-            out, _ = p.communicate()
-            f = out.decode("ascii")
-            lst = f.split('\n')
+        try:
+            lst = None
+            while lst is None or len(lst) > 3 or max(len(x) for x in lst) > 50:
+                p = subprocess.Popen(['fortune', '-s'],
+                                     stdout=subprocess.PIPE,
+                                     stderr=subprocess.PIPE)
+                out, _ = p.communicate()
+                f = out.decode("ascii")
+                lst = f.split('\n')
 
-        self.fortune = [""] * 3
-        for i, x in enumerate(lst):
-            self.fortune[i] = x.strip().replace("\t"," ")
+            self.fortune = [""] * 3
+            for i, x in enumerate(lst):
+                self.fortune[i] = x.strip().replace("\t"," ")
+        except FileNotFoundError:
+            self.fortune = [""] * 3
+            self.fortune[0] = "Error: 'fortune' program not installed!"
 
     def loop(self, screen):
         t1 = self.font.render(self.fortune[0], True, self.white)
